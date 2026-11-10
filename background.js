@@ -1,4 +1,6 @@
 // MRU tab cycling. State lives in storage.session so it survives service-worker restarts.
+importScripts('windows.js');
+
 const KEY = 'cycle';
 const STALE_MS = 15000;
 const MAX_TABS = 7;

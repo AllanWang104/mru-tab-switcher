@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>MRU Tab Switcher options</title>
+  <style>
+    body { font: 13px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; margin: 16px; min-width: 360px; }
+    label { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 14px; }
+    input { margin-top: 3px; }
+    small { color: #6b6b6b; display: block; }
+    @media (prefers-color-scheme: dark) { body { background: #202124; color: #e8eaed; } small { color: #9aa0a6; } }
+  </style>
+</head>
+<body>
+  <label>
+    <input type="checkbox" id="mini">
+    <span>Mini window for links from other apps
+      <small>Links opened from Slack, Mail, etc. open in a small floating window. ⌘O moves the page into the main window.</small></span>
+  </label>
+  <label>
+    <input type="checkbox" id="peek">
+    <span>Peek links to other sites
+      <small>Clicking a link to a different site opens a preview over the page. Esc or clicking outside closes it; ⌘O keeps it as a tab.</small></span>
+  </label>
+  <script src="options.js"></script>
+</body>
+</html>
