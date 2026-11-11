@@ -17,9 +17,9 @@ Chromium won't let extensions bind the Tab key, so the setup has two parts:
 1. **The extension** (plain MV3, no build step) binds **Ctrl+Q** / **Ctrl+Shift+Q**. It
    orders tabs by `tab.lastAccessed`, draws the overlay inside the page, and switches tabs
    when the page sees **Ctrl** released.
-2. **[BetterTouchTool](https://folivora.ai)** remaps **Ctrl+Tab** to **Ctrl+Q** (and
-   **Ctrl+Shift+Tab** to **Ctrl+Shift+Q**), only while your browser is the front app. You
-   never press Ctrl+Q yourself.
+2. **[Karabiner-Elements](https://karabiner-elements.pqrs.org)** (free, open source) remaps
+   **Ctrl+Tab** to **Ctrl+Q** (and **Ctrl+Shift+Tab** to **Ctrl+Shift+Q**), only while your
+   browser is the front app. You never press Ctrl+Q yourself.
 
 An extension can only screenshot the tab that's currently visible. So each tab is captured
 when you switch to it, when it finishes loading, and shortly after you scroll or click in it.
@@ -34,12 +34,23 @@ opens in a small popup window instead.
    this folder.
 2. Go to `chrome://extensions/shortcuts` and check that MRU Tab Switcher has **⌃Q**, **⌃⇧Q** and
    **⌘⇧C**. Set any that are missing.
-3. Find your browser's bundle ID, then generate and import the BetterTouchTool preset:
+3. Set up the Ctrl+Tab remap:
 
    ```sh
-   osascript -e 'id of app "Google Chrome"'        # → com.google.Chrome
-   python3 btt/make-preset.py com.google.Chrome > btt/tab-switcher.bttpreset
-   open btt/tab-switcher.bttpreset                  # imports into BetterTouchTool
+   python3 karabiner/install.py
+   ```
+
+   This installs Karabiner-Elements with Homebrew if it's missing and adds the rule to your
+   active Karabiner profile. Karabiner picks the change up right away. On a fresh install,
+   approve the permissions Karabiner asks for (Input Monitoring and its driver extension).
+   Running the command again replaces the rule rather than adding a second copy.
+
+   The rule covers Google Chrome by default. For other Chromium browsers, pass their bundle
+   IDs:
+
+   ```sh
+   osascript -e 'id of app "Brave Browser"'        # → com.brave.Browser
+   python3 karabiner/install.py com.google.Chrome com.brave.Browser
    ```
 
 ## Files
@@ -51,7 +62,7 @@ opens in a small popup window instead.
 | `ui.js` | Shared rendering for the overlay and the popup fallback |
 | `switcher.html` / `switcher.js` | Popup fallback for pages that block content scripts |
 | `offscreen.html` / `offscreen.js` | Clipboard writer for copy URL |
-| `btt/make-preset.py` | Generates the BetterTouchTool preset for a given browser |
+| `karabiner/install.py` | Installs Karabiner-Elements and adds the Ctrl+Tab remap for your browsers |
 
 ## License
 
