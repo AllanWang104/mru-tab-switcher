@@ -1,25 +1,18 @@
-#!/usr/bin/env python3
-"""Install the Karabiner-Elements rule that drives the MRU Tab Switcher.
+"""Karabiner-Elements remapper: writes the Ctrl+Tab rule into karabiner.json.
 
-Chromium extensions can't bind Tab, so Karabiner turns Ctrl+Tab / Ctrl+Shift+Tab into
-the extension's Ctrl+Q / Ctrl+Shift+Q commands, only while one of the given browsers
-is the front app. Installs Karabiner-Elements with Homebrew if it's missing, then writes
-the rule straight into karabiner.json, which Karabiner reloads on its own. Re-running
-replaces the rule instead of adding a second copy.
-
-    python3 karabiner/install.py                                # Google Chrome
-    python3 karabiner/install.py com.google.Chrome com.brave.Browser
+Installs Karabiner-Elements with Homebrew if it's missing, then writes the rule straight
+into the active profile, which Karabiner reloads on its own. Re-running replaces the rule
+instead of adding a second copy.
 """
 import json
 import os
 import re
-import shutil
-import subprocess
 import sys
 import tempfile
 from pathlib import Path
 
-DEFAULT_BUNDLE_IDS = ["com.google.Chrome"]
+from apps import ensure_app_installed
+
 RULE_DESCRIPTION = "MRU Tab Switcher: Ctrl+Tab -> Ctrl+Q, Ctrl+Shift+Tab -> Ctrl+Shift+Q"
 CONFIG_PATH = Path.home() / ".config" / "karabiner" / "karabiner.json"
 APP_PATH = Path("/Applications/Karabiner-Elements.app")
@@ -84,24 +77,7 @@ def install_rule(config_path, bundle_ids):
     write_config(config_path, merge_rule(read_config(config_path), build_rule(bundle_ids)))
 
 
-def ensure_karabiner_installed():
-    if APP_PATH.exists():
-        return
-    if shutil.which("brew") is None:
-        sys.exit("Karabiner-Elements isn't installed and Homebrew isn't available. "
-                 "Install it from https://karabiner-elements.pqrs.org, then re-run.")
-    print("Installing Karabiner-Elements with Homebrew...")
-    subprocess.run(["brew", "install", "--cask", "karabiner-elements"], check=True)
-    subprocess.run(["open", "-a", "Karabiner-Elements"], check=True)
-    print("Approve the permissions Karabiner-Elements asks for, or the remap won't work.")
-
-
-def main():
-    bundle_ids = sys.argv[1:] or DEFAULT_BUNDLE_IDS
-    ensure_karabiner_installed()
+def install(bundle_ids):
+    ensure_app_installed(APP_PATH, "karabiner-elements", "Karabiner-Elements",
+                         "https://karabiner-elements.pqrs.org")
     install_rule(CONFIG_PATH, bundle_ids)
-    print(f"Ctrl+Tab -> Ctrl+Q is on for: {', '.join(bundle_ids)}")
-
-
-if __name__ == "__main__":
-    main()

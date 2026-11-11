@@ -3,7 +3,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from install import RULE_DESCRIPTION, build_rule, install_rule, merge_rule
+from karabiner import RULE_DESCRIPTION, build_rule, install_rule, merge_rule
 
 
 def profile(name, selected, rules):
